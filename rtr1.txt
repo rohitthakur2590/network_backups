@@ -1,0 +1,98 @@
+set version 18.4R1.8
+set groups test
+set system login user ansible uid 2000
+set system login user ansible class super-user
+set system login user ansible authentication encrypted-password "$6$02Ee.cIP$a0qCZ1IfC/ZcwDo7eXvzL7aB1SYeBDkTADdcqVEZi5sY9YpjgPI56uXiUo3GPs.8mJLZHBxpxsoBOoaxeBLNy1"
+set system login user ansible_test uid 2001
+set system login user ansible_test class operator
+set system login user ansible_test authentication encrypted-password "$6$2l9O9GNa$2qHLaFTVFnULX9MdiDovwLzufTKvv1Aa50qBZVfg7HowfYGIGCNnZHhbCMRoH2csEcJ.RXD.D5XhS5DPiAz7l0"
+set system login user awx uid 2002
+set system login user awx class super-user
+set system login user awx authentication ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC0bIku93WCAhFCPD8UzdEwDcsCihozLmsV0SpyUxQidNGsESe7PmvoCOoHM04oBLGj96NMrUqoQylpKnkdR4aaqOSm1/Yz5puKq/0mc/5Fa1j+ikRJA8IVZghfLfDy5AoZ0jWk5DLoILWcHAia++LzTEQPwucVe8C7CFORYyBJhSrpVnWrMoCdqrbqX8prZJ0eme1KQnf0urQF3p0VxSqeZE8KGfSz8KXhjQ8RDfch+47yjx+byWHAxxY3JnnkyOPbZAEElLS9biVluosRYfYfOIql5ThbRoBi118Oj4HQ7KZxCULz7qocqtj+Ja5ln11LyN7jT/dtaiSEuefSUYFQ/boUDFtot4waAP/ZN3DGiX0FVSey9CkzuUSB0eAefZRAwQfVcqYfIzMV/dPB+VBVsEXuY94gKYkPmcBGIOFdXaptL3iGgdtKALxtup+FQ9Acyqjcn0G+xWeTFqqlSoOLhzMLHhDtPwEjLiTBCtBgMgC5NW/efMtbZjgCk3PSTFiWyholGhil/Iajr8c1mKtvLHos5CO0Hi6hARw2PPBgPrmRWClJQHCBGTB4eX3I1wMlYxq2iiqvcj5pTRC1wL/xwXVwc7tcbj+aJPmTTAR+6ArK4OYYgspiftp5Y4oHa+DgTVfGoVuViwo6DaLPTlXwpVJwMql3gdnr08lOQ5XBzQ== awx"
+set system root-authentication encrypted-password "$6$rq/fwx7H$VPFcLwKOYy.v1i93uo1L4nfh7BtYBN9j8t9sFNOiajcISOzMI60MEfDQ3Cj9J1iWGOo1WoPC0a4ooweMJL0NN."
+set system services ssh
+set system services netconf ssh port 830
+set system services web-management http interface fxp0.0
+set system host-name 10
+set system license autoupdate url https://ae1.juniper.net/junos/key_retrieval
+set system phone-home server https://redirect.juniper.net
+set interfaces ge-0/0/1 unit 0 family inet
+set interfaces ge-0/0/1 unit 0 family inet6
+set interfaces ge-0/0/2 unit 0 family inet
+set interfaces ge-0/0/2 unit 0 family inet6
+set interfaces ge-0/0/3 unit 0 family ethernet-switching
+set interfaces ge-0/0/4 native-vlan-id 50
+set interfaces ge-0/0/4 unit 0 family ethernet-switching interface-mode trunk
+set interfaces ge-0/0/4 unit 0 family ethernet-switching vlan members vlan30
+set interfaces ge-1/0/0 unit 0 family inet filter input-list allow_ssh_acl
+set interfaces fxp0 enable
+set interfaces fxp0 unit 0 family inet dhcp
+set interfaces fxp0 unit 0 family inet6
+set snmp community 44930 clients 1.1.1.1/32
+set snmp community testing1 clients 10.222.138.80/29
+set snmp community testing4 clients 10.222.138.88/29
+set snmp community testing4 clients 2.2.2.2/32
+set snmp trap-options source-address 192.168.4.0
+set snmp trap-options routing-instance rtr1 source-address 192.168.3.0
+set snmp trap-options routing-instance rtr33 source-address 192.168.3.0
+set firewall family inet filter initial_acl term ten_dot from source-address 10.0.0.0/8
+set firewall family inet filter initial_acl term ten_dot from protocol tcp
+set firewall family inet filter initial_acl term ten_dot from source-port bgp
+set firewall family inet filter initial_acl term eleven_dot from source-address 11.0.0.0/8
+set firewall family inet filter initial_acl term eleven_dot from protocol tcp
+set firewall family inet filter initial_acl term eleven_dot from source-port bgp
+set firewall family inet filter second_acl term twelve_dot from source-address 12.0.0.0/8
+set firewall family inet filter second_acl term twelve_dot from protocol tcp
+set firewall family inet filter second_acl term twelve_dot from source-port bgp
+set firewall family inet filter third_acl term thirteen_dot from source-address 13.0.0.0/16
+set firewall family inet filter third_acl term thirteen_dot from source-address 13.1.0.0/16
+set firewall family inet filter third_acl term thirteen_dot from protocol tcp
+set firewall family inet filter third_acl term thirteen_dot from source-port bgp
+set firewall family inet filter allow_ssh_acl term ssh_rule from protocol tcp
+set firewall family inet filter allow_ssh_acl term ssh_rule from source-port ssh
+set firewall family inet6 filter initial_acl6 term colon_eleven from source-address ::11/128
+set firewall family inet6 filter initial_acl6 term colon_eleven from source-port 631
+set protocols bgp family inet unicast local-ipv4-address 9.9.9.9
+set protocols bgp family inet unicast extended-nexthop
+set protocols bgp family inet unicast extended-nexthop-color
+set protocols bgp family inet flow loops 4
+set protocols bgp family inet flow no-install
+set protocols bgp family inet flow output-queue-priority expedited
+set protocols bgp family inet flow legacy-redirect-ip-action receive
+set protocols bgp family inet flow legacy-redirect-ip-action send
+set protocols bgp family inet flow secondary-independent-resolution
+set protocols bgp family inet any accepted-prefix-limit maximum 20
+set protocols bgp family inet any accepted-prefix-limit teardown 99
+set protocols bgp family inet any accepted-prefix-limit teardown idle-timeout 2000
+set protocols bgp family inet any damping
+set protocols bgp family inet any delay-route-advertisements minimum-delay routing-uptime 23000
+set protocols bgp family inet any delay-route-advertisements minimum-delay inbound-convergence 32000
+set protocols bgp family inet any delay-route-advertisements maximum-delay route-age 20
+set protocols bgp family inet any delay-route-advertisements maximum-delay routing-uptime 32000
+set protocols bgp family inet any defer-initial-multipath-build maximum-delay 2
+set protocols bgp family inet any graceful-restart forwarding-state-bit from-fib
+set protocols bgp family inet labeled-unicast prefix-limit maximum 20
+set protocols bgp family inet labeled-unicast prefix-limit teardown 99
+set protocols bgp family inet labeled-unicast prefix-limit teardown idle-timeout forever
+set protocols bgp family inet labeled-unicast route-refresh-priority priority 3
+set protocols bgp family inet labeled-unicast per-prefix-label
+set protocols bgp family inet labeled-unicast per-group-label
+set protocols bgp family inet labeled-unicast rib inet.3
+set protocols bgp family inet labeled-unicast explicit-null connected-only
+set protocols bgp family inet labeled-unicast resolve-vpn
+set protocols bgp family inet labeled-unicast entropy-label no-next-hop-validation
+set protocols bgp family evpn signaling accepted-prefix-limit maximum 20
+set protocols bgp family evpn signaling accepted-prefix-limit teardown 98
+set protocols bgp family evpn signaling accepted-prefix-limit teardown idle-timeout 2001
+set protocols bgp family evpn signaling damping
+set protocols bgp family evpn signaling defer-initial-multipath-build maximum-delay 2
+set routing-options static route 192.168.16.0/24 next-hop 172.16.1.2
+set routing-options static route 192.168.16.0/24 next-hop 172.16.1.3
+set routing-options static route 192.168.47.0/24 next-hop 10.200.16.2
+set routing-options autonomous-system 65534
+set routing-options autonomous-system loops 3
+set routing-options autonomous-system asdot-notation
+set vlans employee vlan-range 120-130
+set vlans v101 vlan-id 20
+set vlans vlan30 vlan-id 25
+set vlans vlan31 vlan-id 50
